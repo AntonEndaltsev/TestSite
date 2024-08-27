@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Person</title>
+</head>
+<body>
+<p th:text="${person.getName()}"></p>
+<p th:text="${person.getId()}"></p>
+<p th:text="${person.getEmail()}"></p>
+<p th:text="${person.getYearOfBirth}"></p>
+
+<div th:if="${books.isEmpty()}">
+    <p>List of books is empty</p>
+    <br/>
+</div>
+
+<div th:if="${!books.isEmpty()}">
+    <br/>
+    <b> Person's books:</b>
+    <br/>
+    <table th:each="book: ${books}">
+        <tr>
+            <td>
+                <span th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}"
+                      th:style="${book.isExpired()} ? 'color:red' : 'color:black'">
+                    book
+                </span>
+            </td>
+        </tr>
+    </table>
+    <br/>
+</div>
+<a th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>
+
+<form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+    <input type="submit" value="Delete">
+</form>
+</body>
+</html>
