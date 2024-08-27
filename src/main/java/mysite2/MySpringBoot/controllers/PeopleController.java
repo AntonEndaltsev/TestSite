@@ -1,7 +1,6 @@
 package mysite2.MySpringBoot.controllers;
 
 
-
 import mysite2.MySpringBoot.models.Person;
 import mysite2.MySpringBoot.services.PeopleService;
 import org.springframework.stereotype.Controller;
@@ -23,21 +22,21 @@ public class PeopleController {
         model.addAttribute("people", peopleService.findAll());
         // добавил доп. комментарий
         //System.out.println("!!!!");
-        return "/people/index";
+        return "people/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id,Model model){
         model.addAttribute("person", peopleService.findOne(id));
         model.addAttribute("books", peopleService.getBookByPersonId(id));
-        return "/people/show";
+        return "people/show";
     }
 
     @GetMapping("/new")
     public String newPerson(Model model){
         model.addAttribute("person", new Person());
 
-        return "/people/new";
+        return "people/new";
     }
 
     @PostMapping()
@@ -50,7 +49,7 @@ public class PeopleController {
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id){
         model.addAttribute("person", peopleService.findOne(id));
-        return "/people/edit";
+        return "people/edit";
     }
 
     @PatchMapping("/{id}")
