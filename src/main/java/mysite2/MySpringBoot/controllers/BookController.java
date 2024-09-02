@@ -15,7 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+
+@RestController
 @RequestMapping("/books")
 public class BookController {
 
@@ -30,31 +32,31 @@ public class BookController {
 
     @Tag(name="Контроллер для вывода списка книг")
     @GetMapping()
-    public String index(Model model, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "books_per_page", required = false) Integer booksPerPage, @RequestParam(value = "sort_by_year", required = false) boolean sortByYear){
+    public List<Book> index(Model model, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "books_per_page", required = false) Integer booksPerPage, @RequestParam(value = "sort_by_year", required = false) boolean sortByYear){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             MyUserDetails personDetails = (MyUserDetails) authentication.getPrincipal();
-            System.out.println(personDetails.getUser());
+            //System.out.println(personDetails.getUser());
             model.addAttribute("loginuser", personDetails.getUser());
         }
         else {
             model.addAttribute("loginuser", null);
-            System.out.println("----");
+            //System.out.println("----");
         }
 
         if (page==null || booksPerPage==null)
             model.addAttribute("books", bookService.findAll(sortByYear));
         else
             model.addAttribute("books", bookService.findWithPagination(page, booksPerPage, sortByYear));
-        return "books/index";
+        return bookService.findWithPagination(page, booksPerPage, sortByYear);
     }
 
 
 
     @Tag(name="Контроллер для вывода инфы по конкретной книге + показывает кто взял эту книгу с возможность удалить владельца + если книга ничья, то выводится список всех людей и возможность забронировать книгу")
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model) {
+    public Book show(@PathVariable("id") int id, Model model) {
         model.addAttribute("book", bookService.findOne(id));
         model.addAttribute("owner", null);
         Person bookOwner = bookService.getBookOwner(id);
@@ -62,69 +64,69 @@ public class BookController {
         if (bookOwner!=null) model.addAttribute("owner", bookOwner);
         else model.addAttribute("people", peopleService.findAll());
 
-        return "books/show";
+        return bookService.findOne(id);
     }
 
     @Tag(name="Контроллер для вывода формы, добавляющую новую книгу")
     @GetMapping("/new")
-    public String newBook(@ModelAttribute("book") Book book){
-        return "books/new";
+    public void newBook(@ModelAttribute("book") Book book){
+        //return new Book();
     }
 
     @Tag(name="Контроллер для добавления новой книги")
     @PostMapping()
-    public String create(@ModelAttribute("book") Book book){
+    public void create(@ModelAttribute("book") Book book){
         bookService.save(book);
-        return "redirect:/books";
+        //return "redirect:/books";
     }
 
     @Tag(name="Контроллер для вывода формы, редактирующую выбранную книгу")
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id){
+    public void edit(Model model, @PathVariable("id") int id){
         model.addAttribute(("book"), bookService.findOne(id));
-        return "books/edit";
+        //return new Book();
     }
 
     @Tag(name="Контроллер для обновления данных выбранной книги")
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("book") Book book, @PathVariable("id") int id){
+    public void update(@ModelAttribute("book") Book book, @PathVariable("id") int id){
         bookService.update(id,book);
-        return "redirect:/books";
+        //return "redirect:/books";
     }
 
     @Tag(name="Контроллер для удаления выбранной книги")
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") int id){
+    public void delete(@PathVariable("id") int id){
         bookService.delete(id);
-        return "redirect:/books";
+        //return "redirect:/books";
     }
 
     @Tag(name="Контроллер для удаления владельца выбранной книги")
     @PatchMapping("/{id}/release")
-    public String release(@PathVariable("id") int id){
+    public void release(@PathVariable("id") int id){
         bookService.release(id);
-        return "redirect:/books/"+id;
+        //return "redirect:/books/"+id;
     }
 
     @Tag(name="Контроллер для установки владельца выбранной книги")
     @PatchMapping("/{id}/assign")
-    public String assign(@PathVariable("id") int id, @RequestParam(value = "owner", required = true) Integer ownerId) {
+    public void assign(@PathVariable("id") int id, @RequestParam(value = "owner", required = true) Integer ownerId) {
         Person selectedPerson = peopleService.findOne(ownerId);
         bookService.assign(id, selectedPerson);
         //System.out.println(selectedPerson.getName());
-        return "redirect:/books/" +id;
+       // return "redirect:/books/" +id;
     }
 
     @Tag(name="Контроллер для вывода формы поиска книг по названию с возможностью пагинации и сортировки по году (параметры page, books_per_page, sortbyyear)")
     @GetMapping("/search")
-    public String searchPage() {
-        return "books/search";
+    public void searchPage() {
+        //return "books/search";
     }
 
     @Tag(name="Контроллер для вывода результатов поиска с учетом пагинации и сортировки по году выпуска книги")
     @PostMapping("/search")
-    public String makeSearch(Model model, @RequestParam("query") String query){
+    public List<Book> makeSearch(Model model, @RequestParam("query") String query){
         model.addAttribute("books", bookService.searchByTitle(query));
-        return "books/search";
+        return bookService.searchByTitle(query);
     }
 }

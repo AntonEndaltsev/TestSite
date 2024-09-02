@@ -39,6 +39,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/books/**").permitAll() //вход без авторизации
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/**").permitAll()
                         .requestMatchers("/people/**").hasAuthority("ROLE_ADMIN")) //с авторизацией и аутентификацией
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();

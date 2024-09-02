@@ -9,7 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+import java.util.Optional;
+
+@RestController
 @RequestMapping("/people")
 public class PeopleController {
 
@@ -22,56 +25,57 @@ public class PeopleController {
     @Tag(name="Контроллер для вывода списка людей")
     @GetMapping()
     //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String index(Model model){
-        model.addAttribute("people", peopleService.findAll());
+    public List<Person> index(Model model){
+        //model.addAttribute("people", peopleService.findAll());
         // добавил доп. комментарий
         //System.out.println("!!!!");
-        return "people/index";
+        System.out.println(peopleService.findAll());
+        return peopleService.findAll();
     }
 
     @Tag(name="Контроллер для вывода информации по конкретному человеку")
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id,Model model){
+    public Person show(@PathVariable("id") int id, Model model){
         model.addAttribute("person", peopleService.findOne(id));
         model.addAttribute("books", peopleService.getBookByPersonId(id));
-        return "people/show";
+        return peopleService.findOne(id);
     }
 
     @Tag(name="Контроллер для вывода формы, добавляющей нового человека")
     @GetMapping("/new")
-    public String newPerson(Model model){
+    public void newPerson(Model model){
         model.addAttribute("person", new Person());
 
-        return "people/new";
+        //return new Person();
     }
 
     @Tag(name="Контроллер для добавления нового человека в БД")
     @PostMapping()
-    public String create(@ModelAttribute("person") Person person){
+    public void create(@ModelAttribute("person") Person person){
         peopleService.save(person);
         //System.out.println("---");
-        return "redirect:/people";
+        //return peopleService.save(person);
     }
 
     @Tag(name="Контроллер для вывода формы, редактирующей поля существующего человека")
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id){
+    public void edit(Model model, @PathVariable("id") int id){
         model.addAttribute("person", peopleService.findOne(id));
-        return "people/edit";
+        //return peopleService.findOne(id);
     }
 
     @Tag(name="Контроллер для обновления данных существующего человека")
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("person") Person person, @PathVariable("id") int id) {
+    public void update(@ModelAttribute("person") Person person, @PathVariable("id") int id) {
         peopleService.update(id, person);
 
-        return "redirect:/people";
+        //return "redirect:/people";
     }
 
     @Tag(name="Контроллер для вывода удаления человека")
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") int id){
+    public void delete(@PathVariable("id") int id){
         peopleService.delete(id);
-        return "redirect:/people";
+        //return "redirect:/people";
     }
 }
