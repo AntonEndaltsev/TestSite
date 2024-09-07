@@ -1,0 +1,27 @@
+package mysite2.MySpringBoot.models;
+
+import jakarta.persistence.Column;
+
+public class PersonV1DTO {
+    private String name;
+    private int age;
+
+    public PersonV1DTO() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}

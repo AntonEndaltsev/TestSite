@@ -1,19 +1,22 @@
 package mysite2.MySpringBoot.controllers;
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import mysite2.MySpringBoot.models.Person;
+import mysite2.MySpringBoot.models.PersonV1DTO;
+import mysite2.MySpringBoot.models.PersonV2DTO;
 import mysite2.MySpringBoot.services.PeopleService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/people")
+
 public class PeopleController {
 
     private final PeopleService peopleService;
@@ -22,15 +25,45 @@ public class PeopleController {
         this.peopleService = peopleService;
     }
 
-    @Tag(name="Контроллер для вывода списка людей")
-    @GetMapping()
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<Person> index(Model model){
-        //model.addAttribute("people", peopleService.findAll());
-        // добавил доп. комментарий
-        //System.out.println("!!!!");
-        System.out.println(peopleService.findAll());
-        return peopleService.findAll();
+    @Tag(name="Вывод списка людей с разными версиями")
+    @Operation(summary="v1 - выводит список людей (имя/возраст), v2 - выводит список людей (только имя), v3 + HttpHeader 'Option'='all' - выводит список людей(имя, возраст), v3 + Отсутствие HttpHeader 'Option' - выводит список людей (только имя)")
+    @GetMapping("/{version}/people")
+    public ResponseEntity<?>  index(@PathVariable("version") String version, @RequestHeader(value = "Option", required = false) String option){
+
+        if (version.equals("v1"))
+            return new ResponseEntity<>(convertToDTO1(peopleService.findAll()), HttpStatus.OK);
+        else if (version.equals("v2"))
+                return new ResponseEntity<>(convertToDTO2(peopleService.findAll()), HttpStatus.OK);
+        else if (version.equals("v3") && option.equals("all")) return new ResponseEntity<>(convertToDTO1(peopleService.findAll()), HttpStatus.OK);
+        else if (version.equals("v3") && !option.equals("all")) return new ResponseEntity<>(convertToDTO2(peopleService.findAll()), HttpStatus.OK);
+
+        //return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.noContent().build();
+
+
+    }
+
+    private Object convertToDTO1(List<Person> all) {
+        ArrayList<PersonV1DTO> personV1DTO = new ArrayList<>();
+
+        for (Person p:all){
+            PersonV1DTO pV1DTO = new PersonV1DTO();
+            pV1DTO.setName(p.getName());
+            pV1DTO.setAge(p.getAge());
+            personV1DTO.add(pV1DTO);
+        }
+        return personV1DTO;
+    }
+
+    private Object convertToDTO2(List<Person> all) {
+        ArrayList<PersonV2DTO> personV2DTO = new ArrayList<>();
+
+        for (Person p:all){
+            PersonV2DTO pV2DTO = new PersonV2DTO();
+            pV2DTO.setName(p.getName());
+            personV2DTO.add(pV2DTO);
+        }
+        return personV2DTO;
     }
 
     @Tag(name="Контроллер для вывода информации по конкретному человеку")

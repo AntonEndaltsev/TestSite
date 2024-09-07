@@ -41,6 +41,9 @@ public class SecurityConfig {
                         .requestMatchers("/books/**").permitAll() //вход без авторизации
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/**").permitAll()
+                        .requestMatchers("/v1/**").permitAll()
+                        .requestMatchers("/v2/**").permitAll()
+                        .requestMatchers("/v4/**").permitAll()
                         .requestMatchers("/people/**").hasAuthority("ROLE_ADMIN")) //с авторизацией и аутентификацией
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
