@@ -43,8 +43,10 @@ public class PeopleController {
 
     }
 
-    private Object convertToDTO1(List<Person> all) {
-        ArrayList<PersonV1DTO> personV1DTO = new ArrayList<>();
+
+
+    private List<?> convertToDTO1(List<Person> all) {
+        List<PersonV1DTO> personV1DTO = new ArrayList<>();
 
         for (Person p:all){
             PersonV1DTO pV1DTO = new PersonV1DTO();
@@ -55,7 +57,7 @@ public class PeopleController {
         return personV1DTO;
     }
 
-    private Object convertToDTO2(List<Person> all) {
+    private List<?> convertToDTO2(List<Person> all) {
         ArrayList<PersonV2DTO> personV2DTO = new ArrayList<>();
 
         for (Person p:all){
@@ -67,11 +69,11 @@ public class PeopleController {
     }
 
     @Tag(name="Контроллер для вывода информации по конкретному человеку")
-    @GetMapping("/{id}")
-    public Person show(@PathVariable("id") int id, Model model){
+    @GetMapping("/people/{id}")
+    public ResponseEntity<?>  show(@PathVariable("id") int id, Model model){
         model.addAttribute("person", peopleService.findOne(id));
         model.addAttribute("books", peopleService.getBookByPersonId(id));
-        return peopleService.findOne(id);
+        return new ResponseEntity<>(peopleService.findOne(id), HttpStatus.OK);
     }
 
     @Tag(name="Контроллер для вывода формы, добавляющей нового человека")
