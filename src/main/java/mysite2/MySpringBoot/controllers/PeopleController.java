@@ -29,7 +29,7 @@ public class PeopleController {
     @Operation(summary="v1 - выводит список людей (имя/возраст), v2 - выводит список людей (только имя), v3 + HttpHeader 'Option'='all' - выводит список людей(имя, возраст), v3 + Отсутствие HttpHeader 'Option' - выводит список людей (только имя)")
     @GetMapping("/{version}/people")
     public ResponseEntity<?>  index(@PathVariable("version") String version, @RequestHeader(value = "Option", required = false) String option){
-
+        // comment
         if (version.equals("v1"))
             return new ResponseEntity<>(convertToDTO1(peopleService.findAll()), HttpStatus.OK);
         else if (version.equals("v2"))
