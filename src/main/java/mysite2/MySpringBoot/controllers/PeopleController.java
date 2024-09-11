@@ -31,7 +31,7 @@ public class PeopleController {
     public ResponseEntity<?>  index(@PathVariable("version") String version, @RequestHeader(value = "Option", required = false) String option){
 
         if (version.equals("v1"))
-            return new ResponseEntity<>(convertToDTO1(peopleService.findAll()), HttpStatus.OK);
+            return new ResponseEntity<>(convertToDTO2(peopleService.findAll()), HttpStatus.OK);
         else if (version.equals("v2"))
                 return new ResponseEntity<>(convertToDTO2(peopleService.findAll()), HttpStatus.OK);
         else if (version.equals("v3") && option.equals("all")) return new ResponseEntity<>(convertToDTO1(peopleService.findAll()), HttpStatus.OK);
