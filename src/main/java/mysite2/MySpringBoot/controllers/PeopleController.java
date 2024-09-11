@@ -68,7 +68,7 @@ public class PeopleController {
         return personV2DTO;
     }
 
-    @Tag(name="Контроллер для вывода информации по конкретному человеку")
+    @Tag(name="Вывод информации по конкретному человеку")
     @GetMapping("/people/{id}")
     public ResponseEntity<?>  show(@PathVariable("id") int id, Model model){
         model.addAttribute("person", peopleService.findOne(id));
@@ -76,7 +76,7 @@ public class PeopleController {
         return new ResponseEntity<>(peopleService.findOne(id), HttpStatus.OK);
     }
 
-    @Tag(name="Контроллер для вывода формы, добавляющей нового человека")
+    @Tag(name="Вывод формы, добавляющей нового человека")
     @GetMapping("/new")
     public void newPerson(Model model){
         model.addAttribute("person", new Person());
@@ -84,7 +84,7 @@ public class PeopleController {
         //return new Person();
     }
 
-    @Tag(name="Контроллер для добавления нового человека в БД")
+    @Tag(name="Добавление нового человека в БД")
     @PostMapping()
     public void create(@ModelAttribute("person") Person person){
         peopleService.save(person);
@@ -92,14 +92,14 @@ public class PeopleController {
         //return peopleService.save(person);
     }
 
-    @Tag(name="Контроллер для вывода формы, редактирующей поля существующего человека")
+    @Tag(name="Вывод формы, редактирующей поля существующего человека")
     @GetMapping("/{id}/edit")
     public void edit(Model model, @PathVariable("id") int id){
         model.addAttribute("person", peopleService.findOne(id));
         //return peopleService.findOne(id);
     }
 
-    @Tag(name="Контроллер для обновления данных существующего человека")
+    @Tag(name="Обновление данных существующего человека")
     @PatchMapping("/{id}")
     public void update(@ModelAttribute("person") Person person, @PathVariable("id") int id) {
         peopleService.update(id, person);
@@ -107,7 +107,7 @@ public class PeopleController {
         //return "redirect:/people";
     }
 
-    @Tag(name="Контроллер для вывода удаления человека")
+    @Tag(name="Удаление человека")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") int id){
         peopleService.delete(id);
