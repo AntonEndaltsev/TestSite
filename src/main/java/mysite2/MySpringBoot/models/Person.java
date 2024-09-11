@@ -47,6 +47,14 @@ public class Person{
         this.name = name;
     }
 
+
+    public Person(String name, int age, String email, int yearOfBirth) {
+        this.name = name;
+        this.age = age;
+        this.email = email;
+        this.yearOfBirth = yearOfBirth;
+    }
+
     public Person(){
 
     }

@@ -44,6 +44,11 @@ public class BookService {
         return foundBook.orElse(null);
     }
 
+    public Book findByTitle (String name){
+        Optional<Book> foundBook = bookRepository.findByTitle(name);
+        return foundBook.orElse(null);
+    }
+
     public List<Book> searchByTitle(String query) {return bookRepository.findByTitleStartingWith(query);}
 
     @Transactional

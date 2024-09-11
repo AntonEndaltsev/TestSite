@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 //юнит тестирование контроллера, репозиторий фэйковый, т.к. не затрагиваем другие слои
 
 @WebMvcTest (PeopleController.class)
-public class PeopleControllerTest1 {
+public class PeopleControllerTestNotWork {
     @Autowired
     private MockMvc mvc;
 

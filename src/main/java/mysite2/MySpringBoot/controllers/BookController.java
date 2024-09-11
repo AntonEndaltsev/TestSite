@@ -7,6 +7,8 @@ import mysite2.MySpringBoot.models.MyUserDetails;
 import mysite2.MySpringBoot.models.Person;
 import mysite2.MySpringBoot.services.BookService;
 import mysite2.MySpringBoot.services.PeopleService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -110,9 +112,14 @@ public class BookController {
 
     @Tag(name="Контроллер для установки владельца выбранной книги")
     @PatchMapping("/{id}/assign")
-    public void assign(@PathVariable("id") int id, @RequestParam(value = "owner", required = true) Integer ownerId) {
+    public ResponseEntity<?> assign(@PathVariable("id") int id, @RequestParam(value = "owner", required = true) Integer ownerId) {
         Person selectedPerson = peopleService.findOne(ownerId);
+        //System.out.println(selectedPerson.getName());
+        if (selectedPerson==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         bookService.assign(id, selectedPerson);
+        //System.out.println(id);
+        if (bookService.findOne(id)==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.OK);
         //System.out.println(selectedPerson.getName());
        // return "redirect:/books/" +id;
     }
