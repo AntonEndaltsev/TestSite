@@ -10,9 +10,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "master" ]
+   # branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+   # branches: [ "master" ]
 
 jobs:
   build:
@@ -29,6 +29,6 @@ jobs:
         cache: maven
     - name: Test Project
       run: mvn -B test --file pom.xml
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+   #- name: Build with Maven
+   #   run: mvn -B package --file pom.xml
 
