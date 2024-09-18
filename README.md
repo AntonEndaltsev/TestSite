@@ -5,4 +5,4 @@
 - Сделана версионизация двух типов: по endpoint'ам, по HTTP-header<br/>
 - Сделаны unit и интеграционные тесты (в том числе с использованием testcontainers)<br/>
 - Через Github Actions внедрен CI/CD. При пуше или пуллреквесте прогоняются тесты.<br/>
-- Внутри сервиса - Spring Data Jpa, Hibernate, Spring Boot
+- Внутри сервиса - Spring Data JPA, Hibernate, Spring Boot
